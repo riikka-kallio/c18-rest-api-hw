@@ -1,4 +1,3 @@
-console.log('hello world');
 
 try {
   const response = await fetch('/api/v1/books');
