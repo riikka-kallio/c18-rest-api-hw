@@ -1,6 +1,7 @@
 import 'dotenv/config'
 
 import express from "express";
+import { validationResult } from 'express-validator';
 import mongoose, { Schema } from 'mongoose';
 
 const app = express();
@@ -80,10 +81,10 @@ app.get('/api/v1/books/:id?', async (req, res) => {
 
 app.post("/api/v1/books", async (req, res) => {
     // Check validation
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   return res.status(400).json({ errors: errors.array() });
-    // }
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
     const bookData = req.body;
     console.info(bookData);
@@ -103,10 +104,10 @@ app.post("/api/v1/books", async (req, res) => {
 
 app.put('/api/v1/books/:id', async (req, res) => {
     // Check validation
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   return res.status(400).json({ errors: errors.array() });
-    // }
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     try {
         const result = await Book.updateOne({ _id: req.params.id }, req.body);
         if (result.n === 0) return res.sendStatus(404);
