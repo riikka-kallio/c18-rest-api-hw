@@ -1,8 +1,8 @@
 import 'dotenv/config'
 
 import express from "express";
-import { validationResult } from 'express-validator';
 import mongoose, { Schema } from 'mongoose';
+import { query, body, validationResult } from "express-validator";
 
 const app = express();
 
@@ -50,7 +50,7 @@ const bookSchema = new Schema({
         required: true,
         max: 1000
     },
-    
+
     avatar_url: {
         type: String,
         default: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Open_book_nae_02.svg/1200px-Open_book_nae_02.svg.png",
@@ -83,11 +83,12 @@ app.get('/api/v1/books/:id?', async (req, res) => {
     // QUERY to get books
 });
 
-app.post("/api/v1/books", async (req, res) => {
+app.post("/api/v1/books", body("title").isString(), async (req, res) => {
     // Check validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+        console.log(errors)
+        return res.status(400).json({ errors: errors.array() });
     }
 
     const bookData = req.body;
@@ -110,7 +111,7 @@ app.put('/api/v1/books/:id', async (req, res) => {
     // Check validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ errors: errors.array() });
     }
     try {
         const result = await Book.updateOne({ _id: req.params.id }, req.body);
